@@ -4,7 +4,7 @@ The model we use is SRGAN - Super Resolution General Adversary Networks
 
 ## Prologue: Why are we doing this ?
 
-Let's be honest here - ~~This is a really interesting field and we're passionate about computer vision so we decided to take this project on~~ theres a neat prize. #BeHonest
+This is a really interesting field and we're passionate about computer vision and gaming so we decided to take this project on. ~~theres also a neat prize~~.
 
 
 ## Part I: The Generator Network
@@ -17,11 +17,11 @@ This network takes a high resolution image produced by the generator network and
 
 Basically, generator tries to fool the discriminator and discriminator tries to catch the generator. #TypicalGANBehaviour🕵️🦹
 
-We keep discriminator constant when generator is learning and we keep generator constant when discriminator is learning. This way both of them learn simultaenously.
+We keep the discriminator constant when the generator is learning and we keep the generator constant when the discriminator is learning. This way both of them learn simultaenously.
 
 ## Part III: Efficiency  
 
-Usually some parts of images are really easy to zoom into like clear water with no waves. To make a high resolution image, just copy blue pixels around water for example, so that they blend and you are done. Whereas the same technique cannot be used for a detailed landscape like a grassland. We need very fine details in a high resolution image which we cannot get from just copying a pixel value into surrounding pixels. To overcome this problem we train two networks labeled Coarse and Fine. We will sample parts of an image which we think is important and will assign them weights. After running our coarse network on it, we will judge using the previous weights which include fine details and geometry which our network couldn't obtain. We will choose those specific parts and cut out some more parts near those. Then we will run the Fine network on all of these parts. This way our model will be able to understand fine geometries and simple thinks like water. #MachinesReallyAreStupid
+Occasionally certain sections of images are quite easy to zoom into like clear water with no waves. To make a high resolution image, one could just copy the the color of a pixel into surrounding pixels. Whereas the same technique cannot be used for a detailed landscape like a grassland. We need very fine details in a high resolution image which we cannot get from just copying a pixel value onto surrounding pixels. To overcome this problem two networks labeled Coarse and Fine are put to use. Firstly, important parts of an image are sampled and assigned weights. After running our coarse network on those parts, the results are judged using the previous weights which include fine details and geometry which our network couldn't obtain. We will choose those specific parts and cut out some more parts near those. Finally the Fine network processes all of these parts. This way our model will be able to understand fine geometries and simple things like water. #MachinesReallyAreStupid
 
 ## Part IV: Training
 
