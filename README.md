@@ -4,7 +4,7 @@ The model we use is SRGAN - Super Resolution General Adversary Networks
 
 ## Prologue: Why are we doing this ?
 
-Let's be honest here - ~~we really wanted to dive into this field and since we love computer vision, we took this project on~~ we want money. #BeHonest
+Let's be honest here - ~~This is a really interesting field and we're passionate about computer vision so we decided to take this project on~~ theres a neat prize. #BeHonest
 
 
 ## Part I: The Generator Network
