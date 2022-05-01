@@ -2,9 +2,11 @@
 
 The model we use is SRGAN - Super Resolution General Adversary Networks
 
+We try to solve the problem where we have a low resolution image but we want to increase the size by x4 without pixelating.
+
 ## Prologue: Why are we doing this ?
 
-This is a really interesting field and we're passionate about computer vision and gaming so we decided to take this project on. ~~theres also a neat prize~~.
+This is a really interesting field and we're passionate about computer vision and gaming so we decided to take this project on. ~~Theres also a neat prize~~
 
 
 ## Part I: The Generator Network
@@ -27,5 +29,10 @@ Occasionally certain sections of images are quite easy to zoom into like clear w
 
 We trained our model using a high resolution dataset in CV, DIVerse 2K. We used Adam Optimizer with a variable learning rate and AutoGrad. #HateComputations
 
+## The End
+
+One might think that we could have used interpolation and could have gotten better results instead of going through this endless pain. Answer is no, interpolation is not aware of content so results are not that good.
+
+This has a lot of uses. First and the most useful one, according to us, is to use in games. Anti-Aliasing is already used to improve the quality but if we use this then our GPU just needs to render 1080p image and our model can generate 4K image for games. Second, this can be used in drones where sometimes mounting a really heavy good quality camera is not possible. Moreover, this can be used in mobile's cameras or in microscopes too when you zoom in too much. Lastly, we can use this to actually create a very good spy cam for James Bond. #IRanOutOfHashtags
 
 
