@@ -58,17 +58,7 @@ Input (HR Image) → Feature Extraction → Classification → Real/Fake Score
 4. **Fine Processing**: Enhance high-priority areas with detailed reconstruction
 5. **Integration**: Combine coarse and fine outputs for final result
 
-## Performance & Applications
-
-### Target Use Cases
-- **Gaming Industry**: Real-time upscaling for improved visual quality without performance cost
-- **Mobile Photography**: Enhance images captured with limited hardware
-- **Surveillance Systems**: Improve clarity of security footage
-- **Medical Imaging**: Enhance microscopy and diagnostic imagery
-- **Drone Photography**: Compensate for weight-limited camera systems
-
 ### Performance Benefits
-- **Quality**: Superior to traditional interpolation methods
 - **Efficiency**: Content-aware processing reduces computational waste
 - **Scalability**: Batch processing capabilities for large datasets
 - **Flexibility**: Adaptable to various image types and domains
@@ -151,11 +141,6 @@ DeepLearningSuperSampling/
 - **Progressive Training**: Coarse network followed by fine-tuning
 - **Adam Optimizer**: Adaptive learning rate with careful hyperparameter tuning
 - **Batch Processing**: Efficient GPU utilization with dynamic batching
-
-### Novel Contributions
-- **Adaptive Sampling**: Content-aware processing inspired by NeRF volume rendering
-- **Dual-Resolution Training**: Simultaneous optimization of coarse and fine networks
-- **Positional Encoding**: Enhanced spatial awareness for better detail reconstruction
 
 ## Results & Evaluation
 
