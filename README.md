@@ -6,7 +6,7 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-1.9+-red.svg)](https://pytorch.org/)
 
-A state-of-the-art deep learning system that intelligently upscales low-resolution images to high-resolution (4K) with minimal artifacts using Super-Resolution Generative Adversarial Networks (SRGAN) enhanced with Neural Radiance Fields (NeRF) techniques for content-aware processing.
+A deep learning system that intelligently upscales low-resolution images to high-resolution (4K) with minimal artifacts using Super-Resolution Generative Adversarial Networks (SRGAN) enhanced with Neural Radiance Fields (NeRF) techniques for content-aware processing.
 
 ## Project Overview
 
@@ -169,16 +169,6 @@ DeepLearningSuperSampling/
 - Preserved fine details and textures
 - Natural-looking super-resolution results
 - Consistent performance across diverse image types
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit pull requests, report bugs, or suggest improvements.
-
-### Development Guidelines
-1. Follow PEP 8 style guidelines
-2. Add comprehensive docstrings
-3. Include unit tests for new features
-4. Update documentation as needed
 
 ## License
 
