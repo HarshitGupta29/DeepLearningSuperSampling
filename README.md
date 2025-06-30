@@ -1,166 +1,38 @@
 # DeepLearningSuperSampling
 
-> **Advanced Super-Resolution using SRGAN with Neural Radiance Fields Integration**
+The model we use is SRGAN - Super Resolution General Adversary Networks
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-1.9+-red.svg)](https://pytorch.org/)
+We try to solve the problem where we have a low resolution image but we want to increase the size by x4 without pixelating.
 
-A deep learning system that intelligently upscales low-resolution images to high-resolution (4K) with minimal artifacts using Super-Resolution Generative Adversarial Networks (SRGAN) enhanced with Neural Radiance Fields (NeRF) techniques for content-aware processing.
+## Prologue: Why are we doing this ?
 
-## Project Overview
+This is a really interesting field and we're passionate about computer vision and gaming so we decided to take this project on. ~~Theres also a neat prize~~
 
-This project addresses the fundamental challenge of image super-resolution: transforming low-resolution images into photorealistic high-resolution outputs without the typical pixelation and blurriness associated with traditional interpolation methods. Our approach combines:
 
-- **SRGAN Architecture**: Generative adversarial training for perceptually realistic results
-- **Content-Aware Processing**: Dual-network (coarse/fine) approach inspired by NeRF for handling varying image complexity
-- **Adaptive Sampling**: Intelligent focus on high-detail regions while efficiently processing uniform areas
+## Part I: The Generator Network
 
-## Key Features
+Our generator network takes a low resolution image and generates a high resolution image. For this, residual blocks and skip connections were used. The residual block consists of a convolution layer followed by a batch normalization layer, a Leaky ReLU activation, one more convolution layer, and lastly a sum method. We also use Pixel Shuffler in the model to make it more robust.
 
-### Core Capabilities
-- **4x Super-Resolution**: Transform images from any resolution to 4x larger with preserved details
-- **Content-Aware Processing**: Automatically identifies and prioritizes complex regions
-- **Real-Time Optimization**: Efficient batch processing with GPU acceleration
-- **Perceptual Quality**: GAN-based training ensures visually appealing results over pixel-perfect accuracy
+## Part II: The Discriminator ~~Terminator~~
 
-### Technical Innovations
-- **Dual-Network Architecture**: Coarse network for general upscaling, fine network for detail enhancement
-- **Positional Encoding**: Advanced spatial awareness for better geometric reconstruction
-- **Stratified Sampling**: Intelligent pixel sampling for computational efficiency
-- **Residual Learning**: Skip connections and residual blocks for stable training
+This network takes a high resolution image produced by the generator network and matches it with high resolution images taken from a camera. It judges if an image is a fake high resolution image or a real high resolution image. In this network we create a stack of layers where a convolution layer followed by a batch norm and a Leaky ReLu. We then take this stack of layers and add them in a line multiple times. In the end we use some Dense and Leaky ReLu, and sigmoid to output a score for the input image.
 
-## Architecture
+Basically, generator tries to fool the discriminator and discriminator tries to catch the generator. #TypicalGANBehaviour🕵️🦹
 
-### Generator Network
-```
-Input (LR Image) → Conv2D → Residual Blocks → Upsampling → Conv2D → Output (HR Image)
-                    ↓
-              Skip Connections & Pixel Shuffling
-```
+We keep the discriminator constant when the generator is learning and we keep the generator constant when the discriminator is learning. This way both of them learn simultaenously.
 
-**Key Components:**
-- **Residual Blocks**: Conv2D → BatchNorm → LeakyReLU → Conv2D → Sum
-- **Upsampling Layers**: Pixel shuffling for artifact-free upscaling
-- **Skip Connections**: Preserve low-level features throughout the network
+## Part III: Efficiency  
 
-### Discriminator Network
-```
-Input (HR Image) → Feature Extraction → Classification → Real/Fake Score
-                      ↓
-                 Multiple Conv Blocks with Increasing Depth
-```
+Occasionally certain sections of images are quite easy to zoom into like clear water with no waves. To make a high resolution image, one could just copy the the color of a pixel into surrounding pixels. Whereas the same technique cannot be used for a detailed landscape like a grassland. We need very fine details in a high resolution image which we cannot get from just copying a pixel value onto surrounding pixels. To overcome this problem two networks labeled Coarse and Fine are put to use. Firstly, important parts of an image are sampled and assigned weights. After running our coarse network on those parts, the results are judged using the previous weights which include fine details and geometry which our network couldn't obtain. We will choose those specific parts and cut out some more parts near those. Finally the Fine network processes all of these parts. This way our model will be able to understand fine geometries and simple things like water. #MachinesReallyAreStupid
 
-### Content-Aware Processing Pipeline
-1. **Image Analysis**: Identify regions of varying complexity
-2. **Coarse Processing**: Generate initial super-resolution estimate
-3. **Importance Sampling**: Weight regions based on detail requirements
-4. **Fine Processing**: Enhance high-priority areas with detailed reconstruction
-5. **Integration**: Combine coarse and fine outputs for final result
+## Part IV: Training
 
-### Performance Benefits
-- **Efficiency**: Content-aware processing reduces computational waste
-- **Scalability**: Batch processing capabilities for large datasets
-- **Flexibility**: Adaptable to various image types and domains
+We trained our model using a high resolution dataset in CV, DIVerse 2K. We used Adam Optimizer with a variable learning rate and AutoGrad. #HateComputations
 
-## Installation & Setup
+## The End
 
-### Prerequisites
-```bash
-Python 3.8+
-PyTorch 1.9+
-NumPy
-Pillow (PIL)
-Matplotlib
-```
+One might think that we could have used interpolation and could have gotten better results instead of going through this endless pain. Answer is no, interpolation is not aware of content so results are not that good.
 
-### Installation
-```bash
-git clone https://github.com/HarshitGupta29/DeepLearningSuperSampling.git
-cd DeepLearningSuperSampling
-pip install -r requirements.txt
-```
+This has a lot of uses. First and the most useful one, according to us, is to use in games. Anti-Aliasing is already used to improve the quality but if we use this then our GPU just needs to render 1080p image and our model can generate 4K image for games. Second, this can be used in drones where sometimes mounting a really heavy good quality camera is not possible. Moreover, this can be used in mobile's cameras or in microscopes too when you zoom in too much. Lastly, we can use this to actually create a very good spy cam for James Bond. #IRanOutOfHashtags
 
-### Dataset Preparation
-The model is trained on the DIVerse 2K (DIV2K) dataset - a high-quality super-resolution benchmark dataset.
 
-```bash
-# Download DIV2K dataset
-mkdir DIV2K_train_HR
-# Place high-resolution training images in DIV2K_train_HR/
-```
-
-## Usage
-
-### Training
-```python
-from pipeline import run
-from model import dlss, nerfdlss
-
-# Initialize models
-generator = dlss()
-discriminator = nerfdlss()
-
-# Start training
-run(epoch=1000, batch_size=64)
-```
-
-### Inference
-```python
-from utils import load_data, train
-import numpy as np
-
-# Load and process images
-input_images = load_data(input_list, image_x=256, image_y=256, batch_size=32)
-
-# Generate super-resolution output
-sr_output = train(input_images, target_images, model, dim_x=256, dim_y=256, batch_size=32)
-```
-
-## Project Structure
-
-```
-DeepLearningSuperSampling/
-├── model.py           # Neural network architectures (Generator, Discriminator, DLSS)
-├── pipeline.py        # Training pipeline and main execution flow
-├── utils.py           # Utility functions for data processing and batching
-├── extras.py          # NeRF-inspired functions (ray casting, positional encoding)
-├── constants.py       # Configuration parameters and hyperparameters
-├── FileLoader.cs      # Unity integration for real-time applications
-└── README.md          # Project documentation
-```
-
-## Technical Details
-
-### Loss Functions
-- **Adversarial Loss**: Standard GAN objective for realistic texture generation
-- **Content Loss**: Perceptual loss using pre-trained VGG features
-- **MSE Loss**: Pixel-wise reconstruction accuracy
-
-### Training Strategy
-- **Progressive Training**: Coarse network followed by fine-tuning
-- **Adam Optimizer**: Adaptive learning rate with careful hyperparameter tuning
-- **Batch Processing**: Efficient GPU utilization with dynamic batching
-
-## Results & Evaluation
-
-### Quantitative Metrics
-- **PSNR**: Peak Signal-to-Noise Ratio for objective quality assessment
-- **SSIM**: Structural Similarity Index for perceptual quality
-- **LPIPS**: Learned Perceptual Image Patch Similarity
-
-### Qualitative Improvements
-- Reduced aliasing and pixelation artifacts
-- Preserved fine details and textures
-- Natural-looking super-resolution results
-- Consistent performance across diverse image types
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
-
-## References
-
-1. Ledig, C., et al. "Photo-realistic single image super-resolution using a generative adversarial network." CVPR 2017.
-2. Mildenhall, B., et al. "NeRF: Representing scenes as neural radiance fields for view synthesis." ECCV 2020.
-3. Wang, X., et al. "ESRGAN: Enhanced super-resolution generative adversarial networks." ECCV 2018.
